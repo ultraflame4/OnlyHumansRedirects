@@ -29,13 +29,15 @@ body {
   width: fit-content;
   /*height: 2rem;*/
   align-items: center;
-  background:  none;
+  /*background:  #242424;*/
   border: 1px solid white;
   display: flex;
   padding: 1rem;
   gap: 0.5rem;
   border-radius: 0.5rem;
   margin: 0.25rem;
+  position: relative;
+  overflow: clip;
 }
 
 #captcha-btn > input{
@@ -46,6 +48,36 @@ body {
 #captcha-btn > p {
   font-weight: 500;
 }
+
+#easter-el{
+  position: absolute;
+  z-index: 1;
+  left: -100%;
+  width: 200%;
+  height: 400%;
+  pointer-events: all;
+  opacity: 0;
+}
+
+[active] #easter-el {
+  position: fixed;
+  left: 0;
+  top: 0;
+  width: 100vw;
+  height: 100vh;
+  pointer-events: none;
+  z-index: -1;
+  opacity: 20%;
+}
+
+[active] #captcha-btn{
+  overflow: visible;
+}
+
+#captcha-btn:has(>#easter-el) > input{
+  pointer-events: none;
+}
+
 
 p{
   margin: 0;
