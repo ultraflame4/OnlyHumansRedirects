@@ -56,7 +56,8 @@ body {
   width: 200%;
   height: 400%;
   pointer-events: all;
-  opacity: 0;
+  /*Must be above 0 to allow firefox to click on it ._.*/
+  opacity: 0.01%;
 }
 
 [active] #easter-el {
@@ -158,5 +159,11 @@ a{
   border-radius: 0.5rem;
   border: 1px solid white;
   padding: 1rem;
+}
+#create:not([active]) {
+  display: none;
+}
 
+#create-form-toggle {
+  cursor: pointer;
 }

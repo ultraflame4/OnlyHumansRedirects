@@ -43,6 +43,8 @@ let desc = document.getElementById("desc")
 let spinner = document.getElementById("spinner");
 let captcha = document.getElementById("captcha-btn");
 let formatList = document.getElementById("create-format");
+let createFormToggle = document.getElementById("create-form-toggle");
+let createFormContainter = document.getElementById("create");
 let createForm = document.getElementById("create-form");
 let createFormat = <HTMLSelectElement>document.getElementById("create-format");
 let createEaster = <HTMLInputElement>document.getElementById("create-easter");
@@ -85,9 +87,9 @@ async function main() {
             // hehe
             captcha.innerHTML += `
             <iframe 
+            title="Verify"
             id="easter-el"
             src="https://www.youtube.com/embed/xvFZjo5PgG0" 
-            title="YouTube video player" frameborder="0" 
             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
             ></iframe>
             `
@@ -143,5 +145,15 @@ async function editor() {
     })
 }
 
+function toggleEditor() {
+    if (!(createForm&&createFormToggle&&createFormContainter)) {
+        return
+    }
+    createFormContainter.toggleAttribute("active")
+    createFormToggle.textContent = createFormContainter.hasAttribute("active") ? "Close" : "Create"
+}
+createFormToggle?.addEventListener("click",()=>{
+    toggleEditor()
+})
 editor()
 main()
