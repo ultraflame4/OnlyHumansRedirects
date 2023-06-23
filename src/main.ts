@@ -50,6 +50,7 @@ let createFormat = <HTMLSelectElement>document.getElementById("create-format");
 let createEaster = <HTMLInputElement>document.getElementById("create-easter");
 let createLink = <HTMLInputElement>document.getElementById("create-input");
 let createResult = <HTMLTextAreaElement>document.getElementById("create-results");
+let createResultLink = <HTMLAnchorElement>document.getElementById("create-results-link");
 const withHttp = (url: string) => !/^https?:\/\//i.test(url) ? `http://${url}` : url;
 
 async function normalRedirect(config: dataJsonFormat) {
@@ -131,7 +132,7 @@ async function main() {
 }
 
 async function editor() {
-    if (!(formatList && createForm && createFormat && createEaster && createLink && createResult)) {
+    if (!(formatList && createForm && createFormat && createEaster && createLink && createResult&& createResultLink)) {
         return
     }
     for (let formattersListKey in FormattersList) {
@@ -142,7 +143,11 @@ async function editor() {
             return
         }
         e.preventDefault()
-        createResult.value=FormattersList[createFormat.value](createLink.value,createEaster.checked)
+        let data = FormattersList[createFormat.value](createLink.value,createEaster.checked)
+        data=data.replaceAll("=","")
+        createResultLink.textContent = `https://links.ultr42.dev?q=${data}`
+        createResultLink.href = `https://links.ultr42.dev?q=${data}`
+        createResult.value=data
     })
 }
 
