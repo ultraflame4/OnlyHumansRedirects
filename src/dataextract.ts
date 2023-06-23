@@ -1,15 +1,19 @@
-import * as hash from "object-hash";
 
 export interface dataJsonFormat {
     to: string,
     easter?: boolean
 }
 
-function CalculateChecksum(subject: string): string {
-    return  hash(subject, {encoding: "binary"})[0]
+async function CalculateChecksum(subject: string): Promise<string> {
+    const encoder = new TextEncoder();
+    const decoder = new TextDecoder("ISO-8859-1"); // use latin1 encoding or elase atob btoa will not work
+    const data = encoder.encode(subject);
+    const hash = await crypto.subtle.digest("SHA-256",data)
+    console.log(decoder.decode(hash)[0])
+    return  decoder.decode(hash)[0]
 }
-function ChecksumTest(check:string, subject:string) {
-    let hashed = CalculateChecksum(subject)
+async function ChecksumTest(check:string, subject:string) {
+    let hashed = await CalculateChecksum(subject)
     if (hashed != check) {
         console.warn(`Checksum failed! Data hash [${check}] does not match generated hash [${hashed}] !\nData might be corrupted!`)
         return false
@@ -23,7 +27,7 @@ function ChecksumTest(check:string, subject:string) {
  * Format for this data is exactly the same as datajsonFormat
  * @param data
  */
-function getData_Json(data: string | null): dataJsonFormat | null {
+async function getData_Json(data: string | null): Promise<dataJsonFormat | null> {
     if (!data) {
         return null
     }
@@ -53,7 +57,7 @@ function getData_Json(data: string | null): dataJsonFormat | null {
  * 2. Rest of string other than last character is url
  * 3. Last character checksum -> md5 hash of the string (excluding the last char which is the check) and get first character
  */
-function getData_FormatA(data: string | null): null | dataJsonFormat {
+async function getData_FormatA(data: string | null): Promise<null | dataJsonFormat> {
     if (!data) {
         return null
     }
@@ -63,7 +67,7 @@ function getData_FormatA(data: string | null): null | dataJsonFormat {
         const to = decoded.slice(1, decoded.length - 1);
         const check = decoded[decoded.length - 1]
         let subject = decoded.slice(0, decoded.length - 1)
-        if (!ChecksumTest(check,subject)) {
+        if (!await ChecksumTest(check,subject)) {
 
             return null
         }
@@ -75,18 +79,18 @@ function getData_FormatA(data: string | null): null | dataJsonFormat {
     }
 }
 
-export const FormatList: Array<(data: string | null) => dataJsonFormat | null> = [
+export const FormatList: Array<(data: string | null) => Promise<dataJsonFormat | null>> = [
     getData_Json,
     getData_FormatA // new format after json
 ]
 
 
-export const FormattersList: { [name: string]: (url: string, easter: boolean) => string} = {
-    formatJson(url,easter) {
+export const FormattersList: { [name: string]: (url: string, easter: boolean) => Promise<string>} = {
+    async formatJson(url,easter) {
         return btoa(JSON.stringify({to:url,easter}))
     },
-    formatA(url,easter) {
+    async formatA(url,easter) {
         let subject = `${easter?1:0}${url}`
-        return btoa(subject+CalculateChecksum(subject))
+        return btoa(subject+await CalculateChecksum(subject))
     },
 }

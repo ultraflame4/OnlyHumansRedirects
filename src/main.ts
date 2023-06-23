@@ -19,11 +19,11 @@ function getRandomInt(min: number, max: number) {
 
 let redirect_to: string | null
 
-function getData(data: string | null) {
+async function getData(data: string | null) {
     for (let i = 0; i < FormatList.length; i++) {
         let extractor = FormatList[i];
         try {
-            let result = extractor(data);
+            let result = await extractor(data);
             if (result) {
                 return result
             }
@@ -71,7 +71,7 @@ async function normalRedirect(config: dataJsonFormat) {
 }
 
 async function main() {
-    const config = getData(data)
+    const config = await getData(data)
     redirect_to = config?.to ?? null
 
     if (!(challenge_id && redirect && timestamp && checkbox && title && desc && spinner && captcha)) {
@@ -138,12 +138,12 @@ async function editor() {
     for (let formattersListKey in FormattersList) {
         formatList.innerHTML += `<option value="${formattersListKey}">${formattersListKey}</option>`
     }
-    createForm.addEventListener("submit", (e) => {
+    createForm.addEventListener("submit", async (e) => {
         if (!(formatList && createForm && createFormat && createEaster && createLink && createResult)) {
             return
         }
         e.preventDefault()
-        let data = FormattersList[createFormat.value](createLink.value,createEaster.checked)
+        let data = await FormattersList[createFormat.value](createLink.value,createEaster.checked)
         data=data.replaceAll("=","")
         createResultLink.textContent = `https://links.ultr42.dev?q=${data}`
         createResultLink.href = `https://links.ultr42.dev?q=${data}`
