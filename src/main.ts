@@ -1,12 +1,9 @@
+import {dataJsonFormat, FormatList} from "./dataextract.ts";
+
 const queryString = window.location.search;
 const urlParams = new URLSearchParams(queryString);
 
 const data = urlParams.get("q")
-
-interface dataJsonFormat {
-    to: string,
-    easter?: boolean
-}
 
 async function delay(duration: number) {
     return new Promise((resolve) => {
@@ -22,33 +19,20 @@ function getRandomInt(min: number, max: number) {
 
 let redirect_to: string | null
 
-/**
- * Setups stuff for redirect
- * Returns false on failure or bad data
- * @param data
- */
-function getData(data: string | null): dataJsonFormat | null {
-    if (!data) {
-        return null
-    }
-    const decoded = atob(data)
+function getData(data: string | null) {
+    for (let i = 0; i < FormatList.length; i++) {
+        let extractor = FormatList[i];
+        try {
+            let result = extractor(data);
+            if (result){
+                return result
+            }
+        }
+        catch (e) {
 
-    let setupData: dataJsonFormat;
-    try {
-        setupData = JSON.parse(decoded)
-    } catch (e) {
-        return null
+        }
     }
-    if (!setupData.to) {
-        return null
-    }
-
-    const redirect_to = setupData?.to;
-    const easter: boolean = setupData?.easter ?? false
-
-    return {
-        easter: easter, to: redirect_to
-    };
+    return null
 }
 
 let challenge_id = document.getElementById("challenge_id");
@@ -79,7 +63,7 @@ async function normalRedirect(config: dataJsonFormat) {
 
 async function main() {
     const config = getData(data)
-
+    redirect_to = config?.to ?? null
 
     if (!( challenge_id && redirect && timestamp && checkbox && title && desc && spinner && captcha)) {
         return
