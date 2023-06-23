@@ -1,27 +1,34 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <title>Are you a human?</title>
     <link rel="stylesheet" type="text/css" href="src/style.css">
-  </head>
-  <body>
+</head>
+<body>
 
-    <h1>Human Verification </h1>
+<h1 id="title">Human Verification </h1>
 
-    <hr/>
-    <p>
-      Please verify that you are not a robot. You will be redirected shortly.
-    </p>
-<!--    <br/>-->
-    <span class="loader"></span>
+<!--    <hr/>-->
+<p id="desc">
+    Please verify that you are not a robot. You will be redirected shortly.
+</p>
 
-    <div id="captcha-btn">
-      <input type="checkbox" >
-      <p>I swear I'm not a robot</p>
-    </div>
+<span class="loader" id="spinner"></span>
 
-    <script type="module" src="/src/main.ts"></script>
-  </body>
+<div id="captcha-btn">
+    <input type="checkbox">
+    <p>I swear I'm not a robot</p>
+</div>
+<footer>
+    <small>
+        Challenge Id : <code id="challenge_id">test</code> |
+        Redirect : <code id="redirect_to"></code> |
+        Timestamp : <code id="timestamp"></code> |
+        Created by : <a href="https://ultr42.dev">ultr42.dev</a>
+    </small>
+</footer>
+<script type="module" src="/src/main.ts"></script>
+</body>
 </html>
