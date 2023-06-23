@@ -81,7 +81,7 @@ async function main() {
     const config = getData(data)
 
 
-    if (!(config && challenge_id && redirect && timestamp && checkbox && title && desc && spinner && captcha)) {
+    if (!( challenge_id && redirect && timestamp && checkbox && title && desc && spinner && captcha)) {
         return
     }
     captcha.style.opacity = "0"
