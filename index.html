@@ -18,8 +18,25 @@
 <span class="loader" id="spinner"></span>
 <br/>
 <div id="captcha-btn">
-    <input type="checkbox" id="checkbox">
+    <input type="checkbox" id="checkbox"/>
     <p>I swear I'm not a robot</p>
+</div>
+
+<div id="create">
+    <b>Redirect Editor</b>
+    <form id="create-form">
+        <label for="create-input">Redirect link</label>
+        <input type="text" id="create-input"/><br/>
+        <label for="create-easter">Enable easter</label>
+        <input type="checkbox" id="create-easter"/><br/>
+        <label for="create-format">Format</label>
+        <select id="create-format">
+
+        </select><br/>
+        <button type="submit">Update</button>
+    </form>
+    <label for="create-results">Results</label><br/>
+    <textarea id="create-results"></textarea>
 </div>
 <footer>
     <small>

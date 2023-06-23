@@ -1,4 +1,4 @@
-import {dataJsonFormat, FormatList} from "./dataextract.ts";
+import {dataJsonFormat, FormatList, FormattersList} from "./dataextract.ts";
 
 const queryString = window.location.search;
 const urlParams = new URLSearchParams(queryString);
@@ -24,11 +24,10 @@ function getData(data: string | null) {
         let extractor = FormatList[i];
         try {
             let result = extractor(data);
-            if (result){
+            if (result) {
                 return result
             }
-        }
-        catch (e) {
+        } catch (e) {
 
         }
     }
@@ -43,7 +42,14 @@ let title = document.getElementById("title");
 let desc = document.getElementById("desc")
 let spinner = document.getElementById("spinner");
 let captcha = document.getElementById("captcha-btn");
-const withHttp = (url:string) => !/^https?:\/\//i.test(url) ? `http://${url}` : url;
+let formatList = document.getElementById("create-format");
+let createForm = document.getElementById("create-form");
+let createFormat = <HTMLSelectElement>document.getElementById("create-format");
+let createEaster = <HTMLInputElement>document.getElementById("create-easter");
+let createLink = <HTMLInputElement>document.getElementById("create-input");
+let createResult = <HTMLTextAreaElement>document.getElementById("create-results");
+const withHttp = (url: string) => !/^https?:\/\//i.test(url) ? `http://${url}` : url;
+
 async function normalRedirect(config: dataJsonFormat) {
     checkbox?.setAttribute("disabled", "true")
     if (!(config && challenge_id && redirect && timestamp && checkbox && title && desc && spinner && captcha)) {
@@ -65,7 +71,7 @@ async function main() {
     const config = getData(data)
     redirect_to = config?.to ?? null
 
-    if (!( challenge_id && redirect && timestamp && checkbox && title && desc && spinner && captcha)) {
+    if (!(challenge_id && redirect && timestamp && checkbox && title && desc && spinner && captcha)) {
         return
     }
     captcha.style.opacity = "0"
@@ -85,20 +91,19 @@ async function main() {
             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
             ></iframe>
             `
-            window.addEventListener("blur",async (ev) => {
+            window.addEventListener("blur", async (ev) => {
                 if (!(config && challenge_id && redirect && timestamp && checkbox && title && desc && spinner && captcha)) {
                     return
                 }
                 if (document.activeElement instanceof HTMLIFrameElement) {
                     await delay(100)
-                    document.body.setAttribute("active","")
+                    document.body.setAttribute("active", "")
                     title.textContent = "Got Em"
                     desc.textContent = "Will redirect you now lmao."
                     await normalRedirect(config)
                 }
             });
-        }
-        else{
+        } else {
             checkbox.addEventListener("change", async (ev) => {
                 if (!config.easter) {
                     await normalRedirect(config)
@@ -122,4 +127,21 @@ async function main() {
 
 }
 
+async function editor() {
+    if (!(formatList && createForm && createFormat && createEaster && createLink && createResult)) {
+        return
+    }
+    for (let formattersListKey in FormattersList) {
+        formatList.innerHTML += `<option value="${formattersListKey}">${formattersListKey}</option>`
+    }
+    createForm.addEventListener("submit", (e) => {
+        if (!(formatList && createForm && createFormat && createEaster && createLink && createResult)) {
+            return
+        }
+        e.preventDefault()
+        createResult.value=FormattersList[createFormat.value](createLink.value,createEaster.checked)
+    })
+}
+
+editor()
 main()
