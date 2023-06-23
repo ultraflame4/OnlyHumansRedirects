@@ -2,12 +2,26 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Vite + TS</title>
+    <title>Are you a human?</title>
+    <link rel="stylesheet" type="text/css" href="src/style.css">
   </head>
   <body>
-    <div id="app"></div>
+
+    <h1>Human Verification </h1>
+
+    <hr/>
+    <p>
+      Please verify that you are not a robot. You will be redirected shortly.
+    </p>
+<!--    <br/>-->
+    <span class="loader"></span>
+
+    <div id="captcha-btn">
+      <input type="checkbox" >
+      <p>I swear I'm not a robot</p>
+    </div>
+
     <script type="module" src="/src/main.ts"></script>
   </body>
 </html>
