@@ -94,6 +94,7 @@ async function main() {
             ></iframe>
             `
             window.addEventListener("blur", async (ev) => {
+                await delay(1) // needed to fix firefox bug
                 if (!(config && challenge_id && redirect && timestamp && checkbox && title && desc && spinner && captcha)) {
                     return
                 }
