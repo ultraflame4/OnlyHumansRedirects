@@ -1,0 +1,55 @@
+name: build-push-deploy
+run-name: ${{ github.actor }} is building this vite app and pushing it to the builds branch
+on:
+  push:
+    branches: [ "main" ]
+
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pages: write
+  id-token: write
+
+
+concurrency:
+  group: 'pages'
+  cancel-in-progress: true
+
+jobs:
+
+  build:
+    name: Build and Push
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Get Branch Name
+        shell: bash
+        run: echo "branch=$(echo ${GITHUB_REF#refs/heads/})" >>$GITHUB_OUTPUT
+        id: extract_branch
+
+      - name: Print Branch Name
+        shell: bash
+        run: echo "${{ steps.extract_branch.outputs.branch }}"
+
+      - name: Set up Node
+        uses: actions/setup-node@v3
+
+      - name: Install all dependencies
+        run: npm install
+
+      - name: Build
+        run: npm run build # The build command of your project
+
+      - name: Push
+        uses: s0/git-publish-subdir-action@develop
+        env:
+          REPO: self
+          BRANCH: builds # The branch name where you want to push the assets
+          FOLDER: dist # The directory where your assets are generated
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # GitHub will automatically add this - you don't need to bother getting a token
+          MESSAGE: "Push: ({sha}) {msg} ${{ steps.extract_branch.outputs.branch }}" # The commit message
+          TARGET_DIR: ${{ steps.extract_branch.outputs.branch }}
