@@ -1,6 +1,9 @@
 # OnlyHumansRedirects
 This is a very bad human captcha that redirects to your website.
 
+![image](https://github.com/ultraflame4/OnlyHumansRedirects/assets/34125174/7ed88872-f77e-4e62-a478-e0b59bdb7c2c)
+
+
 ## Usage
 This website accepts a `q` query parameter which contains information about the redirect encoded in base64 + json
 
