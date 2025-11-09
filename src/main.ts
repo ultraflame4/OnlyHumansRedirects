@@ -3,7 +3,8 @@ import {dataJsonFormat, FormatList, FormattersList} from "./dataextract.ts";
 const queryString = window.location.search;
 const urlParams = new URLSearchParams(queryString);
 
-const data = urlParams.get("q")
+const query = urlParams.get("q")
+const data = query ?? location.hash.slice(1) // Also support data from hash.
 
 async function delay(duration: number) {
     return new Promise((resolve) => {
