@@ -38,7 +38,7 @@ async function getData(data: string | null) {
 let challenge_id = document.getElementById("challenge_id");
 let redirect = document.getElementById("redirect_to");
 let timestamp = document.getElementById("timestamp");
-let checkbox = document.getElementById("checkbox");
+let checkbox = document.getElementById("checkbox") as HTMLInputElement;
 let title = document.getElementById("title");
 let desc = document.getElementById("desc")
 let spinner = document.getElementById("spinner");
@@ -53,7 +53,7 @@ let createLink = <HTMLInputElement>document.getElementById("create-input");
 let createResult = <HTMLTextAreaElement>document.getElementById("create-results");
 let createResultLink = <HTMLAnchorElement>document.getElementById("create-results-link");
 const withHttp = (url: string) => !/^https?:\/\//i.test(url) ? `http://${url}` : url;
-
+checkbox.checked = false
 async function normalRedirect(config: dataJsonFormat) {
     checkbox?.setAttribute("disabled", "true")
     if (!(config && challenge_id && redirect && timestamp && checkbox && title && desc && spinner && captcha)) {
@@ -146,8 +146,8 @@ async function editor() {
         e.preventDefault()
         let data = await FormattersList[createFormat.value](createLink.value,createEaster.checked)
         data=data.replaceAll("=","")
-        createResultLink.textContent = `https://links.ultr42.dev?q=${data}`
-        createResultLink.href = `https://links.ultr42.dev?q=${data}`
+        createResultLink.textContent = `https://links.ultr42.dev#${data}`
+        createResultLink.href = `https://links.ultr42.dev#${data}`
         createResult.value=data
     })
 }
