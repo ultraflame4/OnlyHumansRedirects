@@ -8,11 +8,11 @@ async function CalculateChecksum(subject: string): Promise<string> {
     const encoder = new TextEncoder();
     const decoder = new TextDecoder("ISO-8859-1"); // use latin1 encoding or elase atob btoa will not work
     const data = encoder.encode(subject);
-    const hash = await crypto.subtle.digest("SHA-256",data)
+    const hash = await crypto.subtle.digest("SHA-256", data)
     console.log(decoder.decode(hash)[0])
-    return  decoder.decode(hash)[0]
+    return decoder.decode(hash)[0]
 }
-async function ChecksumTest(check:string, subject:string) {
+async function ChecksumTest(check: string, subject: string) {
     let hashed = await CalculateChecksum(subject)
     if (hashed != check) {
         console.warn(`Checksum failed! Data hash [${check}] does not match generated hash [${hashed}] !\nData might be corrupted!`)
@@ -67,12 +67,12 @@ async function getData_FormatA(data: string | null): Promise<null | dataJsonForm
         const to = decoded.slice(1, decoded.length - 1);
         const check = decoded[decoded.length - 1]
         let subject = decoded.slice(0, decoded.length - 1)
-        if (!await ChecksumTest(check,subject)) {
+        if (!await ChecksumTest(check, subject)) {
 
             return null
         }
 
-        return {easter, to};
+        return { easter, to };
     } catch (e) {
         console.error(e)
         return null
@@ -85,12 +85,13 @@ export const FormatList: Array<(data: string | null) => Promise<dataJsonFormat |
 ]
 
 
-export const FormattersList: { [name: string]: (url: string, easter: boolean) => Promise<string>} = {
-    async formatJson(url,easter) {
-        return btoa(JSON.stringify({to:url,easter}))
+export const FormattersList: { [name: string]: (url: string, easter: boolean) => Promise<string> } = {
+    async formatA(url, easter) {
+        let subject = `${easter ? 1 : 0}${url}`
+        return btoa(subject + await CalculateChecksum(subject))
     },
-    async formatA(url,easter) {
-        let subject = `${easter?1:0}${url}`
-        return btoa(subject+await CalculateChecksum(subject))
+    async formatJson(url, easter) {
+        return btoa(JSON.stringify({ to: url, easter }))
     },
+
 }
